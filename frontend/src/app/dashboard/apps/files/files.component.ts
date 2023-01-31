@@ -7,6 +7,7 @@ import { FileItem } from '../../globals/models';
 @Component({
     selector: 'app-files',
     templateUrl: './files.component.html',
+    styleUrls: ['./files.component.scss'],
 })
 export class FilesComponent {
 
@@ -14,17 +15,9 @@ export class FilesComponent {
     icon = faFilePdf;
     folder_icon = faFolder;
 
-    constructor() { 
-        this.files = [
-            {
-                id: 1,
-                name: "document.pdf",
-                size: 2314123,
-                modified: new Date(),
-                public: true
-            }
-        ];
-        console.log("Files component")
+    constructor() {
+
+        this.files = []
     }
 
 }
