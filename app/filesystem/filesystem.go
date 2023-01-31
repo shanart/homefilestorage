@@ -1,46 +1,70 @@
 package filesystem
 
 import (
-	"crypto/md5"
-	"encoding/hex"
+	"errors"
 	"fmt"
+	"homestorage/app/utils"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/h2non/filetype"
 )
 
-func SaveFileToStorage(file multipart.File, fileHeader *multipart.FileHeader) (*string, *string, error) {
+type FileStorage struct {
+	storage string
+}
 
-	// TODO: this function does not save file content...
-	ext1 := filepath.Ext(fileHeader.Filename)
-	new_generated_name := uuid.New().String() + ext1
+func CreateFileStorage(path string) (*FileStorage, error) {
+	_, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	if os.IsNotExist(err) {
+		return nil, err
+	}
+	// TODO: Create if not exist?...
+	return &FileStorage{
+		storage: path,
+	}, nil
+}
+
+func (s *FileStorage) SaveFileToStorage(file multipart.File, fileHeader *multipart.FileHeader, dFile *utils.File) (*utils.File, error) {
+
+	new_generated_name := fmt.Sprint(time.Now().Unix()) + filepath.Ext(fileHeader.Filename)
 
 	date := time.Now()
-	save_path := fmt.Sprintf("./tmp/%d/%d/%d/%s", date.Year(), date.Month(), date.Day(), new_generated_name)
+	save_path := fmt.Sprintf("%s/%d/%d/%d/%s", s.storage, date.Year(), date.Month(), date.Day(), new_generated_name)
 
-	if err := os.MkdirAll(filepath.Dir(save_path), 0770); err != nil {
-		return nil, nil, err
-	}
-
-	f, err := os.Create(save_path)
+	f, err := os.OpenFile(save_path, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
+	defer f.Close()
 
-	_, err = io.Copy(f, file)
+	_, err = io.Copy(f, file) // save content into new file
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	hash := md5.New()
-	if _, err := io.Copy(hash, file); err != nil {
-		return nil, nil, err
+	hash_string, err := HashFileSha1(save_path)
+	if err != nil {
+		return nil, err
 	}
-	hash_string := hex.EncodeToString(hash.Sum(nil))
 
-	return &save_path, &hash_string, nil
+	buf, _ := ioutil.ReadFile(save_path)
+	kind, _ := filetype.Match(buf)
+	if kind == filetype.Unknown {
+		os.Remove(save_path)
+		return nil, errors.New("unknow file type")
+	}
+
+	dFile.SystemPath = save_path
+	dFile.Hash = hash_string
+	dFile.MimeType = kind.MIME.Value
+
+	return dFile, nil
 }
