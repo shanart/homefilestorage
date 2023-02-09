@@ -7,19 +7,23 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FileIconComponent } from './globals/components/file-icon.component';
 
+import { StoreModule } from '@ngrx/store';
+import { counterReducer } from './store/counter.reducer';
 
 @NgModule({
     declarations: [
         DashboardComponent,
-        SidebarComponent, 
+        SidebarComponent,
         HeaderComponent,
     ],
     imports: [
         CommonModule,
         DashboardRoutingModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        StoreModule.forRoot({ 
+            count: counterReducer,
+        }),
     ],
     providers: [
         {
