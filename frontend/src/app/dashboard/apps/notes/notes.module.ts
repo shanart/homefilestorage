@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../globals/shared.module';
 import { NotesRoutingModule } from './notes-routing.module';
 import { NotesComponent } from './notes.component';
-
+import { NoteItemComponent } from './note-item/note-item.component';
 
 @NgModule({
     declarations: [
-        NotesComponent
+        NotesComponent,
+        NoteItemComponent
     ],
     imports: [
         CommonModule,

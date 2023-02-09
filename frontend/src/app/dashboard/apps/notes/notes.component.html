@@ -1,1 +1,29 @@
-<p>notes works!</p>
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col-md-2 border-end h-100">
+            <h4>Tags</h4>
+            <div class="list-group rounded-0">
+                <button type="button" class="list-group-item list-group-item-action active">
+                    Home
+                </button>
+                <button type="button" class="list-group-item list-group-item-action">Work</button>
+                <button type="button" class="list-group-item list-group-item-action">Hobbi</button>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="row pt-2">
+                <div class="col-md-12">
+                    <label for="search">Search</label>
+                    <input type="text" placeholder="Search..." id="search" class="form-control" (input)="onSearchInput()" #input>
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-md-12"><h4>Notes</h4></div>
+                <div class="col-md-3" *ngFor="let note of notesToShow">
+                    <app-note-item [note]="note"></app-note-item>
+                </div>
+                <div class="col-md-3" *ngIf="!notesToShow.length">Nothing to show...</div>
+            </div>
+        </div>
+    </div>
+</div>

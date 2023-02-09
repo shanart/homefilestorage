@@ -30,3 +30,14 @@ export interface ServerResponse {
     offset: number,
     limit: number
 }
+
+export class Note {
+    constructor(
+        public id: number, 
+        public title: string,
+        public content: string,
+        public created_at: Date,
+        public color: 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark',
+        public labels: number[]
+    ) {}
+}

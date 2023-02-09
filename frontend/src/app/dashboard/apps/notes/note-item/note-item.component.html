@@ -1,0 +1,19 @@
+<div *ngIf="note" class="card border-{{ note.color }} mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>{{ note.created_at | date }}</div>
+        <div ngbDropdown class="d-inline-block">
+            <button type="button" class="btn btn-sm btn-outline-secondary" ngbDropdownToggle>
+                ☰
+            </button>
+            <div ngbDropdownMenu>
+                <button ngbDropdownItem>Action - 1</button>
+                <button ngbDropdownItem>Another Action</button>
+                <button ngbDropdownItem>Something else is here</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ note.title }}</h5>
+        <p class="card-text">{{ note.content }}</p>
+    </div>
+</div>
