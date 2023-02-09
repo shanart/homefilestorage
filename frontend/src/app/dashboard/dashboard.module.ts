@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/auth.interceptor';
@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { StoreModule } from '@ngrx/store';
 import { counterReducer } from './store/counter.reducer';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { counterReducer } from './store/counter.reducer';
         StoreModule.forRoot({ 
             count: counterReducer,
         }),
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     ],
     providers: [
         {
