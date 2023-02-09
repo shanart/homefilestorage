@@ -1,5 +1,10 @@
-<div class="list-group rounded-0 mt-4">
-    <a class="list-group-item bg-transparent text-white" href="#">Files</a>
-    <a class="list-group-item bg-transparent text-white" href="#">Notes</a>
-    <button (click)="sign_out()" class="list-group-item text-start bg-transparent text-white">Logout</button>
+<div class="d-flex justify-content-between flex-column h-100">
+    <div class="list-group rounded-0">
+        <a class="list-group-item bg-transparent text-white" [routerLink]="['files']">Files</a>
+        <a class="list-group-item bg-transparent text-white" [routerLink]="['notes']">Notes</a>
+    </div>
+
+    <div class="list-group rounded-0">
+        <button (click)="sign_out()" class="list-group-item text-start bg-transparent text-white">Logout</button>
+    </div>
 </div>

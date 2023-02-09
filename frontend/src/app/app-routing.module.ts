@@ -4,9 +4,15 @@ import { AuthGuard } from './shared/auth.guard';
 
 
 const routes: Routes = [
-    { path: '', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [AuthGuard]},
-    { path: 'auth', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
-    { path: '**', redirectTo: '' }
+    {
+        path: '',
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), 
+        canActivate: [AuthGuard]
+    },
+    { 
+        path: 'auth', 
+        loadChildren: () => import('./login/login.module').then(m => m.LoginModule) 
+    }
 ];
 
 
