@@ -9,8 +9,9 @@ import { HeaderComponent } from './layout/header/header.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { StoreModule } from '@ngrx/store';
-import { counterReducer } from './store/counter.reducer';
+import { rootReducers } from './store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
     declarations: [
@@ -22,9 +23,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
         CommonModule,
         DashboardRoutingModule,
         FontAwesomeModule,
-        StoreModule.forRoot({ 
-            count: counterReducer,
-        }),
+        StoreModule.forRoot(rootReducers),
+        EffectsModule.forRoot([]),
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     ],
     providers: [

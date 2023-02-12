@@ -1,11 +1,9 @@
 export interface User {
-    id?: number
-    first_name: string
-    last_name: string
+    id: number
     email: string
-    lang: string
+    username: string
     phone: string
-    password?: string
+    icon: string | null
 }
 
 export interface FileItem {
@@ -25,7 +23,7 @@ export interface FolderItem {
 }
 
 export interface ServerResponse {
-    items: Array<FolderItem|FileItem>
+    items: Array<FolderItem | FileItem>
     parent: number,
     offset: number,
     limit: number
@@ -33,11 +31,11 @@ export interface ServerResponse {
 
 export class Note {
     constructor(
-        public id: number, 
+        public id: number,
         public title: string,
         public content: string,
         public created_at: Date,
-        public color: 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark',
+        public color: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark',
         public labels: number[]
-    ) {}
+    ) { }
 }
