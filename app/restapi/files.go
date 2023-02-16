@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"homestorage/app/utils"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -54,36 +53,31 @@ func (h *BaseHandler) RouteSaveFile(w http.ResponseWriter, req bunrouter.Request
 
 func (h *BaseHandler) RouteFilesList(w http.ResponseWriter, req bunrouter.Request) error {
 	token := req.Header.Get("Authorization")
-	_, _, err := utils.IdentifyJWT(strings.Replace(token, "Bearer ", "", 1))
+	_, userId, err := utils.IdentifyJWT(strings.Replace(token, "Bearer ", "", 1))
 	if err != nil {
 		return err
 	}
 
-	_parent := req.URL.Query().Get("parent")
-	parent, err := strconv.Atoi(_parent)
+	var filesParent int
+	qParent := req.URL.Query().Get("parent")
+	if qParent != "" {
+		parent, err := strconv.Atoi(qParent)
+		if err != nil {
+			return err
+		}
+		filesParent = parent
+	} else {
+		filesParent = 0
+	}
+
+	files, err := h.db.GetFiles(filesParent, *userId)
 	if err != nil {
 		return err
 	}
-
-	_offset := req.URL.Query().Get("offset")
-	offset, err := strconv.Atoi(_offset)
-	if err != nil {
-		return err
-	}
-
-	_limit := req.URL.Query().Get("limit")
-	limit, err := strconv.Atoi(_limit)
-	if err != nil {
-		return err
-	}
-
-	// TODO: max limit offset pagination values
-	// 		 to prevent users to get super large values
-	log.Printf("Parent: %d, Limit: %d, Offset: %d\n", parent, limit, offset)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(nil)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(files)
 	return nil
 }
 

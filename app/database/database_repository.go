@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"homestorage/app/utils"
 	"io"
 	"log"
@@ -116,9 +117,54 @@ func (r *DatabaseRepository) GetFolders(fileId int, userId int) (*[]utils.Folder
 	return nil, nil
 }
 
-func (r *DatabaseRepository) GetFiles(fileId int, userId int) (*[]utils.File, error) {
+func (r *DatabaseRepository) GetFiles(parent int, owner int) (*[]utils.File, error) {
+	var files []utils.File
+	var query string = `
+		SELECT 
+			id, name, mime_type, size, system_path, owner, hash, public, folder, created_at 
+		FROM files 
+		WHERE 
+			%s
+		LIMIT 1
+	`
+	params := fmt.Sprintf("owner = %d AND folder is NULL", owner)
+	if parent != 0 {
+		params = fmt.Sprintf("owner = %d AND folder = %d", owner, parent)
 
-	return nil, nil
+	}
+	_q := fmt.Sprintf(query, params)
+	log.Println(_q)
+
+	rows, err := r.db.Query(_q)
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var file utils.File
+		err := rows.Scan(
+			&file.Id,
+			&file.Name,
+			&file.MimeType,
+			&file.Size,
+			&file.SystemPath,
+			&file.Owner,
+			&file.Hash,
+			&file.Public,
+			&file.Folder,
+			&file.Created_at,
+		)
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+		files = append(files, file)
+	}
+
+	return &files, nil
 }
 
 func (r *DatabaseRepository) GetFile(fileId int, userId int) (*utils.File, error) {
